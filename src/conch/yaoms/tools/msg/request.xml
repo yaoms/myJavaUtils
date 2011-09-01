@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE request SYSTEM "douwan3.0_message.dtd" >
+<request>
+  <msgType>msgType</msgType>
+  <userId>userId</userId>
+  <pwd>pwd</pwd>
+  <plat>plat</plat>
+  <system>system</system>
+  <sense>sense</sense>
+  <clientId>clientId</clientId>
+  <lsn>34</lsn>
+</request>

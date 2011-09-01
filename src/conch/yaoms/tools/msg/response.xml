@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE response SYSTEM "douwan3.0_message.dtd" >
+<response>
+  <msgType>msgType</msgType>
+  <sessionId></sessionId>
+  <errorCode>404</errorCode>
+  <errorMessage>df</errorMessage>
+</response>

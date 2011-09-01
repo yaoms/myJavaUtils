@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+     豆玩3.0 通信协议
+     请求消息 结构定义
+     yaoms
+     20110831
+     kkfun.com
+     filename: http://x.funboc.cc/dtd/douwan3.0_message.dtd
+-->
+
+<!ENTITY % boolean	"(true|false)">
+
+<!-- 文本值 -->
+<!ENTITY % text     "#PCDATA">
+
+<!-- 登录属性 -->
+<!ENTITY % loginparams     "userId, pwd, plat, system, sense, clientId, lsn, imsi">
+
+<!-- 错误消息 -->
+<!ENTITY % error     "errorCode, errorMessage">
+
+<!-- 请求消息的根元素 -->
+<!ELEMENT request ( msgType, sessionId?, %loginparams;? )>
+
+<!-- 响应消息的根元素 -->
+<!ELEMENT response ( msgType, sessionId?, %error;? )>
+
+<!-- 消息类型 -->
+<!ELEMENT msgType ( %text; )>
+
+<!-- 用户ID -->
+<!ELEMENT userId ( %text; )>
+
+<!-- 登录密码 -->
+<!ELEMENT pwd ( %text; )>
+
+<!-- 平台 -->
+<!ELEMENT plat ( %text; )>
+
+<!-- 系统 -->
+<!ELEMENT system ( %text; )>
+
+<!-- 分辨率 -->
+<!ELEMENT sense ( %text; )>
+
+<!-- 客户端ID -->
+<!ELEMENT clientId ( %text; )>
+
+<!-- 客户端唯一标志 -->
+<!ELEMENT lsn ( %text; )>
+
+<!-- SIM卡序列号 -->
+<!ELEMENT imsi ( %text; )>
+
+<!-- 会话ID -->
+<!ELEMENT sessionId ( %text; )>
+
+<!-- 错误代码 -->
+<!ELEMENT errorCode ( %text; )>
+
+<!-- 错误消息 -->
+<!ELEMENT errorMessage ( %text; )>
