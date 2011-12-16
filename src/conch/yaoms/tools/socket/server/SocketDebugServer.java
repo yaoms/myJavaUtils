@@ -19,6 +19,7 @@ public class SocketDebugServer extends Thread implements IServerMonitor,
 	 */
 	private IServerMonitor monitor;
 
+
 	/**
 	 * 运行开关
 	 */
@@ -72,12 +73,13 @@ public class SocketDebugServer extends Thread implements IServerMonitor,
 
 				PrintStream printStream = new PrintStream(
 						socket.getOutputStream());
-				printStream.println("HTTP/1.1 200 OK");
-				printStream.println("Server: conch-yaoms/1.0");
-				printStream.println("Date: " + new Date());
-				printStream.println("Content-Type: text/plain");
-				printStream.println();
-				printStream.println("OK");
+				printStream.print("HTTP/1.1 200 OK\r\n");
+				printStream.print("Server: conch-yaoms/1.0\r\n");
+				printStream.print("Date: " + new Date() + "\r\n");
+				printStream.print("Content-Type: text/plain\r\n");
+				printStream.print("Connection: close\r\n");
+				printStream.print("\r\n");
+				printStream.print("Your name is jerry.\r\n");
 
 				socket.close();
 			}
