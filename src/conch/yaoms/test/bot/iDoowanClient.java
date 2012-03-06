@@ -161,4 +161,18 @@ public interface iDoowanClient {
 
 	void addFriend();
 
+	void topCover();
+
+	void topLv();
+
+	void topLord();
+
+	void topWinner();
+
+	void topLeader();
+
+	void topKeepWinner();
+
+	void trainScore();
+
 }

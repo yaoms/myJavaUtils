@@ -4,6 +4,7 @@ import it.sauronsoftware.base64.Base64;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.Properties;
 
 import org.jdom.Document;
@@ -126,6 +127,7 @@ public class Monkey implements iAnima {
 		controler.addCallHandler("练习场排名", "trainTop", this);
 		controler.addCallHandler("练习场规则", "trainRule", this);
 		controler.addCallHandler("开始练习游戏0", "trainStart", this);
+		controler.addCallHandler("上传练习分数10", "trainScore", this);
 		controler.addCallHandler("结束PK0", "pkOver", this);
 		controler.addCallHandler("擂台列表", "lordList", this);
 		controler.addCallHandler("开始擂台游戏0", "lordStart", this);
@@ -147,6 +149,13 @@ public class Monkey implements iAnima {
 		controler.addCallHandler("搜索用户", "searchUserByName", this);
 		controler.addCallHandler("用户资料", "userInfo", this);
 		controler.addCallHandler("加为好友", "addFriend", this);
+
+		controler.addCallHandler("排行榜列表", "topCover", this);
+		controler.addCallHandler("冲级达人", "topLv", this);
+		controler.addCallHandler("打擂高手", "topLord", this);
+		controler.addCallHandler("常胜将军", "topWinner", this);
+		controler.addCallHandler("团队领袖", "topLeader", this);
+		controler.addCallHandler("最高连胜数", "topKeepWinner", this);
 
 		login = login();
 	}
@@ -452,7 +461,9 @@ public class Monkey implements iAnima {
 						String.format(
 								"<req>	<type>UpdateMsgReq</type>\n	<sid>%s</sid>\n</req>\n",
 								sessionId).getBytes());
-		tracker.info("\n" + new String(response));
+		if (response != null) {
+			tracker.info("\n" + new String(response));
+		}
 	}
 
 	@Override
@@ -483,7 +494,7 @@ public class Monkey implements iAnima {
 		byte[] response = sender
 				.send(url,
 						String.format(
-								"<req>\n	<type>TrainTopReq</type>\n	<sid>%s</sid>\n	<gid>1</gid>\n	<idx>0</idx>\n	<items>10</items>\n</req>\n",
+								"<req>\n	<type>TrainTopReq</type>\n	<sid>%s</sid>\n	<gid>0</gid>\n	<idx>0</idx>\n	<items>10</items>\n</req>\n",
 								sessionId).getBytes());
 		tracker.info("\n" + new String(response));
 	}
@@ -513,6 +524,27 @@ public class Monkey implements iAnima {
 						String.format(
 								"<req>\n	<type>StartGameTrainReq</type>\n	<sid>%s</sid>\n	<gid>0</gid>\n</req>\n",
 								sessionId).getBytes());
+		tracker.info("\n" + new String(response));
+	}
+
+	@Override
+	public void trainScore() {
+		tracker.info("练习场得分");
+
+		byte[] data = String
+				.format("<req>\n	<type>TrainScoreReq</type>\n	<sid>%s</sid>\n	<gid>0</gid>\n	<score>10</score>\n</req>\n",
+						sessionId).getBytes();
+
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		try {
+			baos.write(data);
+			baos.write(md5CheckSum.getMd5sumByPrivateKey(data));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		byte[] response = sender.send(url, baos.toByteArray());
 		tracker.info("\n" + new String(response));
 	}
 
@@ -802,14 +834,14 @@ public class Monkey implements iAnima {
 	@Override
 	public void sendMsg() {
 
-		int userId = 10001;
+		int userId = 10386;
 		String msg = "送风口的后果块";
 
 		tracker.info("发送消息到 " + userId);
 		byte[] response = sender
 				.send(url,
 						String.format(
-								"<req>\n	<type>SendMsgReq</type>\n	<sid>%s</sid>\n	<uid>%d</uid>\n	<msg>%s</msg>\n</req>\n",
+								"<req>\n	<type>SendMsgReq</type>\n	<sid>%s</sid>\n	<uid>%d</uid>\n	<MsgType>1</MsgType>\n	<msg>%s</msg>\n</req>\n",
 								sessionId, userId, msg).getBytes());
 		tracker.info("\n" + new String(response));
 	}
@@ -854,6 +886,72 @@ public class Monkey implements iAnima {
 				.send(url,
 						String.format(
 								"<req>\n	<type>AddFriendReq</type>\n	<sid>%s</sid>\n	<uid>10197</uid>\n	<msg>米饭</msg>\n</req>\n",
+								sessionId, userId).getBytes());
+		tracker.info("\n" + new String(response));
+	}
+
+	@Override
+	public void topCover() {
+		tracker.info("排行榜列表");
+		byte[] response = sender
+				.send(url,
+						String.format(
+								"<req>\n	<type>TopCoverViewReq</type>\n	<sid>%s</sid>\n</req>\n",
+								sessionId, userId).getBytes());
+		tracker.info("\n" + new String(response));
+	}
+
+	@Override
+	public void topLv() {
+		tracker.info("冲级达人");
+		byte[] response = sender
+				.send(url,
+						String.format(
+								"<req>\n	<type>TopLvReq</type>\n	<sid>%s</sid>\n</req>\n",
+								sessionId, userId).getBytes());
+		tracker.info("\n" + new String(response));
+	}
+
+	@Override
+	public void topLord() {
+		tracker.info("打擂高手");
+		byte[] response = sender
+				.send(url,
+						String.format(
+								"<req>\n	<type>TopLordReq</type>\n	<sid>%s</sid>\n</req>\n",
+								sessionId, userId).getBytes());
+		tracker.info("\n" + new String(response));
+	}
+
+	@Override
+	public void topWinner() {
+		tracker.info("常胜将军");
+		byte[] response = sender
+				.send(url,
+						String.format(
+								"<req>\n	<type>TopWinerReq</type>\n	<sid>%s</sid>\n</req>\n",
+								sessionId, userId).getBytes());
+		tracker.info("\n" + new String(response));
+	}
+
+	@Override
+	public void topLeader() {
+		tracker.info("团队领袖");
+		byte[] response = sender
+				.send(url,
+						String.format(
+								"<req>\n	<type>TopGroupReq</type>\n	<sid>%s</sid>\n</req>\n",
+								sessionId, userId).getBytes());
+		tracker.info("\n" + new String(response));
+	}
+
+	@Override
+	public void topKeepWinner() {
+		tracker.info("最高连胜数");
+		byte[] response = sender
+				.send(url,
+						String.format(
+								"<req>\n	<type>TopKeepWinerReq</type>\n	<sid>%s</sid>\n</req>\n",
 								sessionId, userId).getBytes());
 		tracker.info("\n" + new String(response));
 	}

@@ -2,12 +2,20 @@ package conch.yaoms.test;
 
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeoutException;
+
+import net.rubyeye.xmemcached.MemcachedClient;
+import net.rubyeye.xmemcached.XMemcachedClient;
+import net.rubyeye.xmemcached.exception.MemcachedException;
 
 import org.jdom.DataConversionException;
 import org.jdom.Document;
@@ -23,7 +31,105 @@ public class Test {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		provs();
+		// defaultFonts();
+		// provs();
+		// testSAXBuild();
+		// testFilterList();
+
+		// testRegex();
+
+		// testMemcached();
+		
+		String string = "afdfd\nasdshfsd\r\nasdfgsfd";
+		
+		string = string.replaceAll("(?<!\r)\n", "\r\n");
+		
+		System.out.println(string);
+	}
+
+	public static void testMemcached() {
+		try {
+
+			MemcachedClient memcachedClient = new XMemcachedClient("localhost",
+					11211);
+
+			Session session = new Session();
+			session.sessionId = "key1";
+			session.map = new HashMap<String, String>();
+			session.map.put("userId", "10020");
+
+			memcachedClient.set(session.sessionId, 10, session);
+
+			Session theSession = memcachedClient.get("key1");
+
+			System.out.println(theSession.map.get("userId"));
+
+			memcachedClient.shutdown();
+
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (TimeoutException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (MemcachedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	public static void testRegex() {
+		String string = "<rsp>\n	<type> AddSpFeeRsp </type>\n<serverurl> http://cs.tisgame.com</serverurl>\n<result>0</result>\n<result_str>1</result_str>\n</rsp>";
+
+		System.out.println("原始内容：\n\n" + string);
+
+		string = string.replaceFirst("<serverurl>.*</serverurl>", String
+				.format("<serverurl>%s</serverurl>", "http://dw3.tisgame.cn"));
+
+		System.out.println();
+
+		System.out.println();
+
+		System.out.println("替换后内容：\n\n" + string);
+	}
+
+	public static void testFilterList() {
+		List<Integer> integers = new ArrayList<Integer>();
+
+		integers.add(1);
+		integers.add(2);
+		integers.add(3);
+		integers.add(4);
+		integers.add(5);
+
+		for (Integer integer : integers) {
+			if (integer == 4) {
+				integers.remove(integer);
+			}
+		}
+
+		for (Integer integer : integers) {
+			System.out.println(integer);
+		}
+	}
+
+	public static void testSAXBuild() {
+		SAXBuilder builder = new SAXBuilder();
+		String xmlString = " <req><type>ApplySpFeeReq</type> <items>5</items><itemlist><item><feeid>10001</feeid><feeamount>200</feeamount><productid>1200001</productid><chargeno>235593492</chargeno><imsi>460027163019945</imsi><lsn>163019945</lsn><chargedate>2011-12-30 16:59:53</chargedate><status>1</status><result>1</result><result_str>��</result_str></item><item><feeid>10001</feeid><feeamount>200</feeamount><productid>1200001</productid><chargeno>235593492</chargeno><imsi>460027163019945</imsi><lsn>163019945</lsn><chargedate>2011-12-30 16:59:53</chargedate><status>1</status><result>1</result><result_str>��</result_str></item><item><feeid>10001</feeid><feeamount>200</feeamount><productid>1200001</productid><chargeno>235593492</chargeno><imsi>460027163019945</imsi><lsn>163019945</lsn><chargedate>2011-12-30 16:59:53</chargedate><status>1</status><result>1</result><result_str>��</result_str></item><item><feeid>10001</feeid><feeamount>200</feeamount><productid>1200001</productid><chargeno>235593492</chargeno><imsi>460027163019945</imsi><lsn>163019945</lsn><chargedate>2011-12-30 16:59:53</chargedate><status>1</status><result>1</result><result_str>��</result_str></item><item><feeid>10001</feeid><feeamount>200</feeamount><productid>1200001</productid><chargeno>235593492</chargeno><imsi>460027163019945</imsi><lsn>163019945</lsn><chargedate>2011-12-30 16:59:53</chargedate><status>1</status><result>1</result><result_str>��</result_str></item></itemlist></req>";
+		Document document = null;
+		try {
+			for (int i = 0; i < 5000; i++) {
+				document = builder.build(new ByteArrayInputStream(xmlString
+						.getBytes()));
+				System.out.println(document + ": "
+						+ document.getRootElement().getChildTextTrim("type"));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/*
@@ -87,9 +193,7 @@ public class Test {
 				"沈阳、大连、丹东、抚顺、朝阳、本溪、盘锦、营口、葫芦岛、辽阳、铁岭、锦州、阜新、鞍山",
 				"万州、万盛、九龙坡、北碚、南岸、南川、双桥、合川、大渡口、巴南、永川、江北、江津、沙坪坝、涪陵、渝中、渝北、长寿、黔江",
 				"西安、咸阳、商洛、安康、宝鸡、延安、榆林、汉中、渭南、铜川", "西宁、果洛、海东、海北、海南、海西、玉树、黄南",
-				"哈尔滨、齐齐哈尔、大兴安岭、大庆、七台河、伊春、佳木斯、双鸭山、牡丹江、绥化、鸡西、鹤岗、黑河",
-				"香港",
-				"澳门",
+				"哈尔滨、齐齐哈尔、大兴安岭、大庆、七台河、伊春、佳木斯、双鸭山、牡丹江、绥化、鸡西、鹤岗、黑河", "香港", "澳门",
 				"台湾" };
 
 		System.out.println(provs.length);
@@ -282,7 +386,11 @@ public class Test {
 
 }
 
-class Session {
+class Session implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7375595770740356697L;
 	String sessionId;
 	Map<String, String> map;
 
