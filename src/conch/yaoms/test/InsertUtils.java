@@ -32,16 +32,16 @@ public class InsertUtils {
 	public static void main(String[] args) {
 		try {
 
-//			insertDouwan(true);
+			// insertDouwan(true);
 
-			// insertNewGameFiles(true);
+			insertNewGameFiles(true);
 			// insertGameHall(true);
 
 			// asciiTest();
 
 			// modifyUser(true);
 
-			 testDB();
+			testDB();
 
 		} catch (Exception e) {
 			e.printStackTrace();
